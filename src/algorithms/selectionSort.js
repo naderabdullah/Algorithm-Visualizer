@@ -5,26 +5,26 @@ export function* selectionSort(arr) {
   
   for (let i = 0; i < a.length - 1; i++) {
     let min = i;
-    for (let j = i + 1; j < a.length; j++) {
+    for (let j = i; j < a.length; j++) {
       comparisonCount++;
-      // yield before swap (to show comparison)
-      yield { 
-        array: [...a], 
-        comparing: [j], 
-        min, 
-        swaps: swapCount, 
-        comparisons: comparisonCount 
+
+      yield {
+        array: [...a],
+        comparing: [j],
+        highlight: min,
+        swaps: swapCount,
+        comparisons: comparisonCount
       };
 
       if (a[j] < a[min]) {
         min = j;
-        // yield after finding new min
-        yield { 
-          array: [...a], 
-          comparing: [j], 
-          min, 
-          swaps: swapCount, 
-          comparisons: comparisonCount 
+
+        yield {
+          array: [...a],
+          comparing: [j],
+          highlight: min,
+          swaps: swapCount,
+          comparisons: comparisonCount
         };
       }
     }
@@ -32,12 +32,13 @@ export function* selectionSort(arr) {
     if (min !== i) {
       [a[i], a[min]] = [a[min], a[i]];
       swapCount++;
-      yield { 
-        array: [...a], 
-        comparing: [i, min], 
-        min, 
-        swaps: swapCount, 
-        comparisons: comparisonCount 
+
+      yield {
+        array: [...a],
+        comparing: [i, min],
+        highlight: min,
+        swaps: swapCount,
+        comparisons: comparisonCount
       };
     }
   }

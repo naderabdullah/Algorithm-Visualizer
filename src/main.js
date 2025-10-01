@@ -98,7 +98,7 @@ function animate() {
     visualizer.drawArray(
       step.value.array,
       step.value.comparing,
-      step.value.min
+      step.value.highlight
     );
     comparisonsEl.textContent = step.value.comparisons || 0;
     swapsEl.textContent = step.value.swaps || 0;

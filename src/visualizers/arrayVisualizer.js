@@ -6,7 +6,7 @@ export class ArrayVisualizer {
     this.ctx = ctx;
   }
 
-  drawArray(arr, comparing = [], min = null) {
+  drawArray(arr, comparing = [], highlight = null) {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     const barWidth = this.canvas.width / arr.length;
     const maxValue = Math.max(...arr);
@@ -18,7 +18,7 @@ export class ArrayVisualizer {
 
       // Create gradient based on state
       let gradient;
-      if (min === i) {
+      if (highlight === i) {
         gradient = this.ctx.createLinearGradient(x, y, x, this.canvas.height);
         gradient.addColorStop(0, '#48bb78');
         gradient.addColorStop(1, '#38a169');
