@@ -2,6 +2,7 @@ import { ArrayVisualizer } from "./visualizers/arrayVisualizer.js";
 import { bubbleSort } from "./algorithms/bubbleSort.js";
 import { selectionSort } from "./algorithms/selectionSort.js";
 import { insertionSort } from "./algorithms/insertionSort.js";
+import { quickSort } from "./algorithms/quickSort.js";
 
 const canvas = document.getElementById("canvas");
 const visualizer = new ArrayVisualizer(canvas);
@@ -11,6 +12,7 @@ const algorithms = {
   bubble: bubbleSort,
   selection: selectionSort,
   insertion: insertionSort,
+  quickSort: quickSort,
   // Easy to add more:
   // merge: mergeSort,
   // quick: quickSort,
