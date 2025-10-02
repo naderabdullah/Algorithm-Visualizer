@@ -1,9 +1,20 @@
 import { ArrayVisualizer } from "./visualizers/arrayVisualizer.js";
 import { bubbleSort } from "./algorithms/bubbleSort.js";
 import { selectionSort } from "./algorithms/selectionSort.js";
+import { insertionSort } from "./algorithms/insertionSort.js";
 
 const canvas = document.getElementById("canvas");
 const visualizer = new ArrayVisualizer(canvas);
+
+// Algorithm registry - add new algorithms here
+const algorithms = {
+  bubble: bubbleSort,
+  selection: selectionSort,
+  insertion: insertionSort,
+  // Easy to add more:
+  // merge: mergeSort,
+  // quick: quickSort,
+};
 
 // Controls
 const speedInput = document.getElementById("speed");
@@ -23,7 +34,7 @@ const swapsEl = document.getElementById("swaps");
 const sizeDisplayEl = document.getElementById("sizeDisplay");
 
 // State
-let delay = 100 - parseInt(speedInput.value) + 1;
+let delay = 501 - parseInt(speedInput.value);
 let arraySize = parseInt(arraySizeInput.value);
 let data = [];
 let originalData = [];
@@ -31,8 +42,11 @@ let sorter = null;
 let isRunning = false;
 let animationId = null;
 
+// Initialize speed display on load
+speedValue.textContent = delay;
+
 function generateArray() {
-  data = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100) + 10);
+  data = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100));
   originalData = [...data];
   visualizer.drawArray(data);
   comparisonsEl.textContent = '0';
@@ -43,7 +57,7 @@ function generateArray() {
 // Speed control
 speedInput.addEventListener("input", () => {
   const sliderVal = parseInt(speedInput.value);
-  delay = 100 - sliderVal + 1;
+  delay = 501 - sliderVal;
   speedValue.textContent = delay;
 });
 
@@ -65,8 +79,19 @@ startBtn.addEventListener("click", () => {
   randomizeBtn.disabled = true;
   algorithmSelect.disabled = true;
   
-  const algorithm = algorithmSelect.value;
-  sorter = algorithm === 'bubble' ? bubbleSort(data) : selectionSort(data);
+  const algorithmKey = algorithmSelect.value;
+  const algorithmFn = algorithms[algorithmKey];
+  
+  if (!algorithmFn) {
+    console.error(`Algorithm "${algorithmKey}" not found`);
+    isRunning = false;
+    startBtn.disabled = false;
+    randomizeBtn.disabled = false;
+    algorithmSelect.disabled = false;
+    return;
+  }
+  
+  sorter = algorithmFn(data);
   animate();
 });
 
