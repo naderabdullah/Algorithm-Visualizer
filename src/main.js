@@ -3,6 +3,7 @@ import { bubbleSort } from "./algorithms/bubbleSort.js";
 import { selectionSort } from "./algorithms/selectionSort.js";
 import { insertionSort } from "./algorithms/insertionSort.js";
 import { quickSort } from "./algorithms/quickSort.js";
+import { countingSort } from "./algorithms/countingSort.js";
 
 const canvas = document.getElementById("canvas");
 const visualizer = new ArrayVisualizer(canvas);
@@ -13,6 +14,7 @@ const algorithms = {
   selection: selectionSort,
   insertion: insertionSort,
   quick: quickSort,
+  counting: countingSort,
   // Easy to add more:
   // merge: mergeSort,
   // quick: quickSort,
