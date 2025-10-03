@@ -1,30 +1,80 @@
-function partition (arr, low, high) {
+export function* quickSort(arr) {
     const a = [...arr];
-    // const high = a.indexOf(Math.max(a));
-    // const low = a.indexOf(Math.min(a));
+    let swapCount = 0;
+    let comparisonCount = 0;
 
-    let pivot = a[high];
-    let i = low - i;
+    yield* quickSortHelper (a, 0, a.length - 1);
 
-    for (j = low; j < high; j++) {
-        if (a[j] <= pivot) {
-            i++;
-            [a[i], a[j]] = [[a[j]], [a[i]]];
+    function* quickSortHelper (array, low, high) {
+        if (low < high) {
+           const pivotIndex = yield* partition (array, low, high);
+
+           yield* quickSortHelper (array, low, pivotIndex - 1);
+           yield* quickSortHelper (array, pivotIndex + 1, high);
         }
     }
 
-    [a[i + 1], a[high]] = [a[high], a[i + 1]];
-    return (i + 1);
-}
+    function* partition (array, low, high) {
+        const pivot = array[high];
+        let i = low - 1;
 
-export function* quickSort(arr) {
-    const a = [...arr];
-    let high = a.length - 1;
-    let low = 0;
+        yield {
+            array: [...array],
+            comparing: [high],
+            highlight: high,
+            swaps: swapCount,
+            comparisons: comparisonCount,
+        };
 
-    if (low < high) {
-        let pivot = partition(a, low, high)
-        quickSort(a, low, pivot - 1);
-        quickSort(a, pivot + 1, high);
+        for (let j = low; j < high; j++) {
+            comparisonCount++;
+
+            yield {
+                array: [...array],
+                comparing: [j, high],
+                highlight: high,
+                swaps: swapCount,
+                comparisons: comparisonCount,
+            };
+
+            if (array[j] <= pivot) {
+                i++;
+
+                if (i !== j) {
+                    [array[i], array[j]] = [array[j], array[i]];
+                    swapCount++;
+
+                    yield {
+                        array: [...array],
+                        comparing: [i, j],
+                        highlight: high,
+                        swaps: swapCount,
+                        comparisons: comparisonCount,
+                    };
+                }
+            }
+        }
+
+        if (i + 1 !== high) {
+            [array[i + 1], array[high]] = [array[high], array[i + 1]];
+            swapCount++;
+
+            yield {
+                array: [...array],
+                comparing: [i + 1, high],
+                highlight: i + 1,
+                swaps: swapCount,
+                comparisons: comparisonCount,
+            };
+        }
+
+        return i + 1;
     }
+
+    return { 
+        array: a, 
+        comparing: [], 
+        swaps: swapCount, 
+        comparisons: comparisonCount 
+    };
 }

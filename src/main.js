@@ -12,7 +12,7 @@ const algorithms = {
   bubble: bubbleSort,
   selection: selectionSort,
   insertion: insertionSort,
-  quickSort: quickSort,
+  quick: quickSort,
   // Easy to add more:
   // merge: mergeSort,
   // quick: quickSort,
@@ -48,7 +48,7 @@ let animationId = null;
 speedValue.textContent = delay;
 
 function generateArray() {
-  data = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100));
+  data = Array.from({ length: arraySize }, () => Math.floor(Math.random() * 100 + 1));
   originalData = [...data];
   visualizer.drawArray(data);
   comparisonsEl.textContent = '0';
