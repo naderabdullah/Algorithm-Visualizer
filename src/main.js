@@ -1,12 +1,15 @@
 import { ArrayVisualizer } from "./visualizers/arrayVisualizer.js";
+import { RadixVisualizer } from "./visualizers/radixVisualizer.js";
 import { bubbleSort } from "./algorithms/bubbleSort.js";
 import { selectionSort } from "./algorithms/selectionSort.js";
 import { insertionSort } from "./algorithms/insertionSort.js";
 import { quickSort } from "./algorithms/quickSort.js";
 import { countingSort } from "./algorithms/countingSort.js";
+import { radixSort } from "./algorithms/radixSort.js";
 
 const canvas = document.getElementById("canvas");
 const visualizer = new ArrayVisualizer(canvas);
+const radixVisualizer = new RadixVisualizer(canvas);
 
 // Algorithm registry - add new algorithms here
 const algorithms = {
@@ -15,9 +18,7 @@ const algorithms = {
   insertion: insertionSort,
   quick: quickSort,
   counting: countingSort,
-  // Easy to add more:
-  // merge: mergeSort,
-  // quick: quickSort,
+  radix: radixSort,
 };
 
 // Controls
@@ -45,6 +46,7 @@ let originalData = [];
 let sorter = null;
 let isRunning = false;
 let animationId = null;
+let currentAlgorithm = null;
 
 // Initialize speed display on load
 speedValue.textContent = delay;
@@ -83,11 +85,11 @@ startBtn.addEventListener("click", () => {
   randomizeBtn.disabled = true;
   algorithmSelect.disabled = true;
   
-  const algorithmKey = algorithmSelect.value;
-  const algorithmFn = algorithms[algorithmKey];
+  currentAlgorithm = algorithmSelect.value;
+  const algorithmFn = algorithms[currentAlgorithm];
   
   if (!algorithmFn) {
-    console.error(`Algorithm "${algorithmKey}" not found`);
+    console.error(`Algorithm "${currentAlgorithm}" not found`);
     isRunning = false;
     startBtn.disabled = false;
     randomizeBtn.disabled = false;
@@ -113,7 +115,14 @@ resetBtn.addEventListener("click", () => {
   }
   isRunning = false;
   data = [...originalData];
-  visualizer.drawArray(data);
+  
+  // Use appropriate visualizer for reset
+  if (currentAlgorithm === 'radix') {
+    radixVisualizer.drawArray(data);
+  } else {
+    visualizer.drawArray(data);
+  }
+  
   comparisonsEl.textContent = '0';
   swapsEl.textContent = '0';
   startBtn.disabled = false;
@@ -124,16 +133,34 @@ resetBtn.addEventListener("click", () => {
 function animate() {
   const step = sorter.next();
   if (!step.done) {
-    visualizer.drawArray(
-      step.value.array,
-      step.value.comparing,
-      step.value.highlight
-    );
+    // Use radix visualizer for radix sort, array visualizer for others
+    if (currentAlgorithm === 'radix') {
+      radixVisualizer.drawRadixSort(
+        step.value.array,
+        step.value.buckets,
+        step.value.digitPos || 0,
+        step.value.highlight,
+        step.value.comparing || []
+      );
+    } else {
+      visualizer.drawArray(
+        step.value.array,
+        step.value.comparing || [],
+        step.value.highlight
+      );
+    }
+    
     comparisonsEl.textContent = step.value.comparisons || 0;
     swapsEl.textContent = step.value.swaps || 0;
     animationId = setTimeout(animate, delay);
   } else {
-    visualizer.drawArray(step.value.array);
+    // Final state - use appropriate visualizer
+    if (currentAlgorithm === 'radix') {
+      radixVisualizer.drawArray(step.value.array);
+    } else {
+      visualizer.drawArray(step.value.array);
+    }
+    
     comparisonsEl.textContent = step.value.comparisons || 0;
     swapsEl.textContent = step.value.swaps || 0;
     isRunning = false;
