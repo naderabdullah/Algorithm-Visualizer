@@ -2,20 +2,15 @@
   "name": "algorithm-visualizer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "vite build",
     "dev": "vite",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "vite": "^7.1.7"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/node": "^24.6.1",
     "ts-node": "^10.9.2",
