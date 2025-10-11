@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc",
-    "dev": "vite"
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
