@@ -28,4 +28,4 @@ pnpm-debug.log*
 .vite/
 
 # Claude settings (local only)
-.claude/
+.claude
